@@ -2,12 +2,12 @@ import telebot
 from telebot import types
 import os
 
-bot = telebot.TeleBot('6116105277:AAEpQRAoSq8LS3c46uDPbQXsSIuBz9GvA7M')
+bot = telebot.TeleBot('yourToken')
 scores={"1": ['Энакин', 'Эрен', 'Элли'],
         "2": ['Галадриэль', 'Музан', 'Танджиро'],
         "3": ['Лютик', 'Санса', 'Фродо'],
         "4": ['Наруто', 'Шерлок', 'Гермиона']}
-admin = []#['smeshok', 'Midnight_Jaina', 'ovchedolly']
+admin = []                                              #список администраторов
 flag = 0
 
 personNames={"1": ['Энакин', 'Эрен', 'Элли'],
@@ -18,7 +18,7 @@ personNames={"1": ['Энакин', 'Эрен', 'Элли'],
 @bot.message_handler(commands=['start'])
 def start(message):
     print(message.chat.id, message.chat.first_name)
-    with open('users_chat_id.txt', mode = 'a') as f:
+    with open('users_chat_id.txt', mode = 'a') as f:                    #запись людей, взаимодействующих с ботом
         f.write(str(message.chat.id) + '\n')
 
     if message.from_user.username in admin:
@@ -29,7 +29,7 @@ def start(message):
         
         bot.send_message(message.chat.id, 'admin', parse_mode='html', reply_markup=markup_admin)
 
-    else:
+else:                                                                     #вводный текст (часть 1)                                                      
         markupGreet = types.InlineKeyboardMarkup()
         reply1 = "Приветствую тебя, мой юный друг! Я - Ариадна, волшебная героиня, которая сопровождает будущих взрослых на их пути. Я знаю множество историй и миров, знаю о любимых многими персонажах и черпаю из их жизней то самое ценное, что так пригождается в реальном мире детям и подросткам. Я помогаю создавать целые миры через игру, в которой такие как ты могут лучше понять себя и определить свои цели в жизни. И сейчас я предлагаю тебе пройти одну из таких игр, или даже перформансов, испытать на себе самые яркие моменты взросления, которые только можно представить в таком интересном месте. Мои герои, которых ты видишь рядом с зеркалом, будут сопровождать тебя, так же у тебя будет возможность пройти пути взросления как некоторые из них. Но только в финале ты узнаешь, путь какого персонажа ты прошел. Готов попробовать?" 
         btn1_ready = types.InlineKeyboardButton('Готов/a', callback_data='greet1')
@@ -40,7 +40,7 @@ def start(message):
 @bot.callback_query_handler(func=lambda c: c.data.startswith('greet'))
 def greetings(callback: types.CallbackQuery):
 
-    if callback.data[-1] == '1':
+    if callback.data[-1] == '1':                                #вводный текст (часть 2)
         markupGreet2 = types.InlineKeyboardMarkup()
         btn2_ready = types.InlineKeyboardButton('Понятно! Давай играть', callback_data='greet2')
 
@@ -58,7 +58,7 @@ def greetings(callback: types.CallbackQuery):
 
 ###############################HELP FUNCTIONS##########################################
 
-def create_reply_markup():
+def create_reply_markup():                                                         #создание стсартовой клавиатуры
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton('Бытовые дилеммы')
         btn2 = types.KeyboardButton('Маршрут Смелость и любопытство')
@@ -69,15 +69,15 @@ def create_reply_markup():
 
         return markup
 
-def max_scores(scores, name):
+def max_scores(scores, name):                                           #подсчёт максимума набираемых очков
     max_value = max(scores[name])
     max_index = scores[name].index(max_value)
 
     return max_index
-##################################################FILE READERS######################################################
+##################################################___FILE READERS___######################################################
         
 @bot.message_handler(content_types=['photo', 'video'])
-def photo_collector(message):
+def photo_collector(message):                                                                      #обработка присланных пользователем фотографий
     name = str(message.chat.first_name) + str(message.chat.last_name)
     
     if message.content_type == 'photo':
@@ -109,7 +109,7 @@ def photo_collector(message):
     os.chdir(previousDirectory)
     bot.reply_to(message, "Отлично, не забудь нажать кнопку!")
 
-def get_free_answers(message):
+def get_free_answers(message):                                                                          #обработка ответов пользователя на свободные вопросы
     name = str(message.chat.first_name) + str(message.chat.last_name)
     previousDirectory = os.getcwd()
    
@@ -126,7 +126,7 @@ def get_free_answers(message):
     os.chdir(previousDirectory)
     bot.reply_to(message, "Не забудь нажать кнопку выше!")
 
-def send_audio (chat_id, type_of_file, name_of_file):
+def send_audio (chat_id, type_of_file, name_of_file):                                                   #отправка ботом аудио
 
     previousDirectory = os.getcwd()
     os.chdir('C:/Users/smesh/Desktop/proga/python/bot/stend/Маршрут 3/materials')
@@ -139,7 +139,7 @@ def send_audio (chat_id, type_of_file, name_of_file):
         bot.send_photo(chat_id, photo)
     os.chdir(previousDirectory)
 
-def send_pictures(chat_id, name_of_file, text, markup=None):
+def send_pictures(chat_id, name_of_file, text, markup=None):                                    #отправка ботом фотографий
     previousDirectory = os.getcwd()
     os.chdir('C:/Users/smesh/Desktop/proga/python/bot/stend/personagePhotos')
 
@@ -150,8 +150,8 @@ def send_pictures(chat_id, name_of_file, text, markup=None):
         bot.send_photo(chat_id, photo, caption = text, reply_markup=markup)
     os.chdir(previousDirectory)
 
-##########################################MARSHRUTY##########################################################################
-def marshrut (message):
+##########################################____MARSHRUTY____##########################################################################
+def marshrut (message):                                                                         #переключение на директорию с нужным маршрутом
     match (message.text):
         case 'Бытовые дилеммы':
             marshrutNumber = '1'
@@ -164,10 +164,9 @@ def marshrut (message):
             
     os.chdir('C:/Users/smesh/Desktop/proga/python/bot/stend/Маршрут ' + marshrutNumber)
     scores[str(message.chat.first_name) + str(message.chat.last_name) + marshrutNumber] = [0, 0, 0]
-    #scores[f"Персонажи{marshrutNumber}"] = [personNames[marshrutNumber][0], personNames[marshrutNumber][1], personNames[marshrutNumber][2]]
     segment(message.chat, 1, 1, int(marshrutNumber))
     
-def segment(chat, taskNumber, segmentNumber, marshrutNumber):
+def segment(chat, taskNumber, segmentNumber, marshrutNumber):                                   #обработчик сегментов. в данной функции отслеживается процесс прохождения пользователем квеста
     global flag
     marshrutNumber = str(marshrutNumber)
     print(chat.first_name, ' ', marshrutNumber, ' ', os.getcwd(), ' segment')
@@ -178,7 +177,7 @@ def segment(chat, taskNumber, segmentNumber, marshrutNumber):
     markupReady.add(btn1_ready)
     name = str(chat.first_name) + str(chat.last_name) + str(marshrutNumber)
 
-    if taskNumber != 4 and segmentNumber != 5:
+    if taskNumber != 4 and segmentNumber != 5:                                                                  #специальные условия для некоторых маршрутов (задано спецификой маршрута)
         os.chdir(f'C:/Users/smesh/Desktop/proga/python/bot/stend/Маршрут {marshrutNumber}/segment{segmentNumber}')
         with open(f'Intro{taskNumber}.txt', mode = 'r', encoding='utf-8') as f:
             intro = f.read()
@@ -207,7 +206,7 @@ def segment(chat, taskNumber, segmentNumber, marshrutNumber):
         else:
             bot.send_message(chat_id, intro, parse_mode='html', reply_markup=markupReady)
                 
-    elif taskNumber == 4:
+    elif taskNumber == 4:                                                               #переход на следующий сегмент
         flag = 0
         finalPers = max_scores(scores, name)
         try:
@@ -219,7 +218,7 @@ def segment(chat, taskNumber, segmentNumber, marshrutNumber):
         
         os.chdir(f'C:/Users/smesh/Desktop/proga/python/bot/stend/Маршрут {marshrutNumber}')
         segment (chat, 1, segmentNumber+1, marshrutNumber)
-    else:
+    else:                                                                       #финал маршрута
         finalMarkup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton('Ещё бы один маршрутик пройти')
         btn2 = types.KeyboardButton('Узнать свой путь')
@@ -230,7 +229,7 @@ def segment(chat, taskNumber, segmentNumber, marshrutNumber):
                          , parse_mode='html', reply_markup=finalMarkup)
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith('ready'))
-def pre_task(callback_query: types.CallbackQuery):
+def pre_task(callback_query: types.CallbackQuery):                                      #вывод задания и вариантов ответа
    
     taskNumber = callback_query.data[-1]
     segmentNumber = callback_query.data[-2]
@@ -297,7 +296,7 @@ def process_callback(callback_query: types.CallbackQuery):
     
     task(callback_query, int(taskNumber), int(segmentNumber), int(callback_query.data[-4]))
 
-def task(callback_query, taskNumber, segmentNumber, marshrutNumber):
+def task(callback_query, taskNumber, segmentNumber, marshrutNumber):                            #реализация выборов в задании
     global scores
 
     choiceNumber = callback_query.data[-1]
@@ -391,8 +390,8 @@ def task(callback_query, taskNumber, segmentNumber, marshrutNumber):
 
 
 #############################################################################################################################
-#######################ADMIN BLOCK###########################################################################################
-def adminScores(message):
+#######################______ADMIN BLOCK_________###########################################################################################
+def adminScores(message):                               #демонстрация очков для администратора
     global scores
     if message.from_user.username in admin:
         output=" "
@@ -402,7 +401,7 @@ def adminScores(message):
         bot.send_message(message.chat.id, output, parse_mode='html')
 
 
-def adminPlayers(message):
+def adminPlayers(message):                                                              #доступ к списку пользователей
     if message.from_user.username in admin:
         previousDirectory = os.getcwd()
         os.chdir('C:/Users/smesh/Desktop/proga/python/bot/stend/user_answers')
@@ -414,7 +413,7 @@ def adminPlayers(message):
         bot.send_message(message.chat.id, 'Список игроков', parse_mode='html', reply_markup=markupPlayers)
 
 @bot.callback_query_handler(func=lambda c: c.data and c.data.startswith('user'))
-def get_user_data(callback_query: types.CallbackQuery):
+def get_user_data(callback_query: types.CallbackQuery):                                 #доступ к медиафайлам пользователей
     if callback_query.from_user.username in admin:
         
         path = f'C:/Users/smesh/Desktop/proga/python/bot/stend/user_answers/{callback_query.data[4:]}'
@@ -448,7 +447,7 @@ def get_user_data(callback_query: types.CallbackQuery):
                 bot.send_message(callback_query.from_user.id, 'Нет данных')
 ##########################################################################################################################
         
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(content_types=['text'])                            #обработка текстовых сообщений
 def get_user_text(message):
     emptyKeyboard = types.ReplyKeyboardRemove()
 
@@ -475,17 +474,7 @@ def get_user_text(message):
         case 'Ещё бы один маршрутик пройти':
             bot.send_message(message.chat.id, 'Тогда выбирай!', parse_mode='html', reply_markup=create_reply_markup())
         case 'Узнать свой путь':
-            bot.send_message(message.chat.id, 'Чтобы узнать результаты, отправляйся к началу своего пути!')
-            '''
-            name = str(message.chat.first_name) + str(message.chat.last_name)
-            for names in scores.keys():
-                if names.startswith(name):
-                    marshrutNumber = names[-1]
-                    bot.send_message(message.chat.id,
-                                     f'Маршрут {marshrutNumber} пройден следующм образом: \nВаши очки:\n {personNames[marshrutNumber][0]}: {scores[names][0]}\n {personNames[marshrutNumber][1]}: {scores[names][1]}\n {personNames[marshrutNumber][2]}: {scores[names][2]}'
-                                     , parse_mode='html')
-            '''        
-            
+            bot.send_message(message.chat.id, 'Чтобы узнать результаты, отправляйся к началу своего пути!') 
         case _:
             get_free_answers(message)
 
